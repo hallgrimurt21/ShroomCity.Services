@@ -3,8 +3,8 @@ using Microsoft.IdentityModel.Tokens;
 using ShroomCity.Models.Constants;
 using ShroomCity.Models.Dtos;
 using ShroomCity.Repositories.DbContext;
+using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Interfaces;
-using ShroomCity.Utilities.Exceptions;
 using System;
 using System.Globalization;
 using System.IdentityModel.Tokens.Jwt;
@@ -36,11 +36,11 @@ public class JwtConfiguration
 public class TokenService : ITokenService
 {
     private readonly JwtConfiguration jwtConfig;
-    private readonly ShroomCityDbContext context;
+    private readonly ITokenRepository tokenRepository;
 
-    public TokenService(ShroomCityDbContext context, JwtConfiguration jwtConfig)
+    public TokenService(ITokenRepository tokenRepository, JwtConfiguration jwtConfig)
     {
-        this.context = context;
+        this.tokenRepository = tokenRepository;
         this.jwtConfig = jwtConfig;
     }
 
@@ -71,9 +71,5 @@ public class TokenService : ITokenService
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
-    public async Task<bool> IsTokenBlacklisted(int tokenId)
-    {
-        var token = await this.context.JwtTokens.FindAsync(tokenId) ?? throw new TokenNotFoundException(tokenId);
-        return token.Blacklisted;
-    }
+    public Task<bool> IsTokenBlacklisted(int tokenId) => this.tokenRepository.IsTokenBlacklisted(tokenId);
 }
