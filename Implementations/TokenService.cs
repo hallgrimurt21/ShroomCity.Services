@@ -1,14 +1,15 @@
 namespace ShroomCity.Services.Implementations;
-using ShroomCity.Models.Dtos;
-using ShroomCity.Services.Interfaces;
-using ShroomCity.Repositories.DbContext;
-using ShroomCity.Utilities.Exceptions;
-using System.Security.Claims;
-using ShroomCity.Models.Constants;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.IdentityModel.Tokens.Jwt;
+using ShroomCity.Models.Constants;
+using ShroomCity.Models.Dtos;
+using ShroomCity.Repositories.DbContext;
+using ShroomCity.Services.Interfaces;
+using ShroomCity.Utilities.Exceptions;
+using System;
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 public class JwtConfiguration
 {
