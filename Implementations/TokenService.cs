@@ -1,7 +1,9 @@
+namespace ShroomCity.Services.Implementations;
 using ShroomCity.Models.Dtos;
 using ShroomCity.Services.Interfaces;
+using ShroomCity.Repositories.DbContext;
+using ShroomCity.Utilities.Exceptions;
 
-namespace ShroomCity.Services.Implementations;
 
 public class JwtConfiguration
 {
@@ -27,13 +29,18 @@ public class JwtConfiguration
 
 public class TokenService : ITokenService
 {
+    private readonly ShroomCityDbContext context;
+
+    public TokenService(ShroomCityDbContext context) => this.context = context;
+
     public string GenerateJwtToken(UserDto user)
     {
         throw new NotImplementedException();
     }
 
-    public Task<bool> IsTokenBlacklisted(int tokenId)
+    public async Task<bool> IsTokenBlacklisted(int tokenId)
     {
-        throw new NotImplementedException();
+        var token = await this.context.JwtTokens.FindAsync(tokenId) ?? throw new TokenNotFoundException(tokenId);
+        return token.Blacklisted;
     }
 }
