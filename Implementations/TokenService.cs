@@ -3,7 +3,12 @@ using ShroomCity.Models.Dtos;
 using ShroomCity.Services.Interfaces;
 using ShroomCity.Repositories.DbContext;
 using ShroomCity.Utilities.Exceptions;
-
+using System.Security.Claims;
+using ShroomCity.Models.Constants;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Globalization;
 
 public class JwtConfiguration
 {
@@ -29,13 +34,40 @@ public class JwtConfiguration
 
 public class TokenService : ITokenService
 {
+    private readonly JwtConfiguration jwtConfig;
     private readonly ShroomCityDbContext context;
 
-    public TokenService(ShroomCityDbContext context) => this.context = context;
+    public TokenService(ShroomCityDbContext context, JwtConfiguration jwtConfig)
+    {
+        this.context = context;
+        this.jwtConfig = jwtConfig;
+    }
 
     public string GenerateJwtToken(UserDto user)
     {
-        throw new NotImplementedException();
+        var claims = new List<Claim>
+        {
+            new(ClaimTypes.Name, user.Name),
+            new(ClaimTypes.Email, user.EmailAddress),
+            // Add additional claims as needed
+        };
+
+        foreach (var permission in user.Permissions)
+        {
+            claims.Add(new Claim(ClaimTypeConstants.PermissionClaimType, permission));
+        }
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.jwtConfig.Secret));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: this.jwtConfig.Issuer,
+            audience: this.jwtConfig.Audience,
+            claims: claims,
+            expires: DateTime.Now.AddMinutes(int.Parse(this.jwtConfig.ExpirationInMinutes, CultureInfo.InvariantCulture)),
+            signingCredentials: creds);
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
 
     public async Task<bool> IsTokenBlacklisted(int tokenId)
