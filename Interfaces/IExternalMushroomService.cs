@@ -1,7 +1,6 @@
+namespace ShroomCity.Services.Interfaces;
 using ShroomCity.Models;
 using ShroomCity.Models.Dtos;
-
-namespace ShroomCity.Services.Interfaces;
 
 public interface IExternalMushroomService
 {
