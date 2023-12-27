@@ -2,7 +2,6 @@ namespace ShroomCity.Services.Implementations;
 using Microsoft.IdentityModel.Tokens;
 using ShroomCity.Models.Constants;
 using ShroomCity.Models.Dtos;
-using ShroomCity.Repositories.DbContext;
 using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Interfaces;
 using System;
@@ -50,7 +49,6 @@ public class TokenService : ITokenService
         {
             new(ClaimTypes.Name, user.Name),
             new(ClaimTypes.Email, user.EmailAddress),
-            // Add additional claims as needed
         };
 
         foreach (var permission in user.Permissions)
