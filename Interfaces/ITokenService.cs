@@ -1,6 +1,5 @@
-using ShroomCity.Models.Dtos;
-
 namespace ShroomCity.Services.Interfaces;
+using ShroomCity.Models.Dtos;
 
 public interface ITokenService
 {
