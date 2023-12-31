@@ -1,23 +1,23 @@
+namespace ShroomCity.Services.Implementations;
 using ShroomCity.Models.Dtos;
 using ShroomCity.Models.InputModels;
+using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Interfaces;
-
-namespace ShroomCity.Services.Implementations;
 
 public class AccountService : IAccountService
 {
-    public Task<UserDto?> Register(RegisterInputModel inputModel)
+    private readonly IAccountRepository accountRepository;
+    private readonly ITokenRepository tokenRepository;
+
+    public AccountService(IAccountRepository accountRepository, ITokenRepository tokenRepository)
     {
-        throw new NotImplementedException();
+        this.accountRepository = accountRepository;
+        this.tokenRepository = tokenRepository;
     }
 
-    public Task<UserDto?> SignIn(LoginInputModel inputModel)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<UserDto?> Register(RegisterInputModel inputModel) => await this.accountRepository.Register(inputModel);
 
-    public Task SignOut(int tokenId)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<UserDto?> SignIn(LoginInputModel inputModel) => await this.accountRepository.SignIn(inputModel);
+
+    public async Task SignOut(int tokenId) => await this.tokenRepository.BlacklistToken(tokenId);
 }
