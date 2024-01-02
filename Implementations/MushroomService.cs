@@ -25,10 +25,7 @@ public class MushroomService : IMushroomService
         throw new NotImplementedException();
     }
 
-    public Task<bool> DeleteMushroomById(int mushroomId)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<bool> DeleteMushroomById(int mushroomId) => this.mushroomRepository.DeleteMushroomById(id);
 
     public Task<Envelope<MushroomDto>?> GetLookupMushrooms(int pageSize, int pageNumber)
     {
