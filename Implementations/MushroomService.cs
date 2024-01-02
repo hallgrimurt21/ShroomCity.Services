@@ -29,10 +29,7 @@ public class MushroomService : IMushroomService
         throw new NotImplementedException();
     }
 
-    public Task<MushroomDetailsDto?> GetMushroomById(int id)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<MushroomDetailsDto?> GetMushroomById(int id) => this.mushroomRepository.GetMushroomById(id);
 
     public Envelope<MushroomDto>? GetMushrooms(string? name, int? stemSizeMinimum, int? stemSizeMaximum, int? capSizeMinimum, int? capSizeMaximum, string? color, int pageSize, int pageNumber)
     {
