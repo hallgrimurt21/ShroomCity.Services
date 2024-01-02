@@ -1,12 +1,20 @@
+namespace ShroomCity.Services.Implementations;
 using ShroomCity.Models;
 using ShroomCity.Models.Dtos;
 using ShroomCity.Models.InputModels;
+using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Interfaces;
-
-namespace ShroomCity.Services.Implementations;
 
 public class MushroomService : IMushroomService
 {
+    private readonly IMushroomRepository mushroomRepository;
+    private readonly IExternalMushroomService externalMushroomService;
+
+    public MushroomService(IMushroomRepository mushroomRepository, IExternalMushroomService externalMushroomService)
+    {
+        this.mushroomRepository = mushroomRepository;
+        this.externalMushroomService = externalMushroomService;
+    }
     public Task<int> CreateMushroom(string researcherEmailAddress, MushroomInputModel inputModel)
     {
         throw new NotImplementedException();
@@ -34,7 +42,14 @@ public class MushroomService : IMushroomService
 
     public Envelope<MushroomDto>? GetMushrooms(string? name, int? stemSizeMinimum, int? stemSizeMaximum, int? capSizeMinimum, int? capSizeMaximum, string? color, int pageSize, int pageNumber)
     {
-        throw new NotImplementedException();
+        var (totalPages, mushrooms) = this.mushroomRepository.GetMushroomsByCriteria(name, stemSizeMinimum, stemSizeMaximum, capSizeMinimum, capSizeMaximum, color, pageSize, pageNumber);
+        return new Envelope<MushroomDto>
+        {
+            PageSize = pageSize,
+            PageNumber = pageNumber,
+            TotalPages = totalPages,
+            Items = mushrooms.ToList()
+        };
     }
 
     public Task<bool> UpdateMushroomById(int mushroomId, MushroomUpdateInputModel inputModel, bool performLookup)
