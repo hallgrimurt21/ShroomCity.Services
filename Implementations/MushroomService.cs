@@ -20,10 +20,7 @@ public class MushroomService : IMushroomService
         throw new NotImplementedException();
     }
 
-    public Task<bool> CreateResearchEntry(int mushroomId, string researcherEmailAddress, ResearchEntryInputModel inputModel)
-    {
-        throw new NotImplementedException();
-    }
+    public Task<bool> CreateResearchEntry(int mushroomId, string researcherEmailAddress, ResearchEntryInputModel inputModel) => this.mushroomRepository.CreateResearchEntry(mushroomId, researcherEmailAddress, inputModel);
 
     public Task<bool> DeleteMushroomById(int mushroomId) => this.mushroomRepository.DeleteMushroomById(id);
 
