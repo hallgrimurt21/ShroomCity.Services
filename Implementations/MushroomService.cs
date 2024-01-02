@@ -1,4 +1,5 @@
 namespace ShroomCity.Services.Implementations;
+
 using ShroomCity.Models;
 using ShroomCity.Models.Dtos;
 using ShroomCity.Models.Enums;
@@ -109,8 +110,27 @@ public class MushroomService : IMushroomService
         };
     }
 
-    public Task<bool> UpdateMushroomById(int mushroomId, MushroomUpdateInputModel inputModel, bool performLookup)
+    public async Task<bool> UpdateMushroomById(int mushroomId, MushroomUpdateInputModel inputModel, bool performLookup)
     {
-        throw new NotImplementedException();
+        if (performLookup)
+        {
+            var mushroom = await this.externalMushroomService.GetMushroomByName(inputModel.Name);
+            if (mushroom == null)
+            {
+                return false;
+            }
+            var externalMushroom = await this.externalMushroomService.GetMushroomByName(mushroom.Name);
+            if (externalMushroom == null)
+            {
+                return false;
+            }
+            var updatedMushroom = new MushroomUpdateInputModel { Name = externalMushroom.Name, Description = externalMushroom.Description };
+            var isSuccessful = await this.mushroomRepository.UpdateMushroomById(mushroomId, updatedMushroom);
+            return isSuccessful;
+        }
+        else
+        {
+            return await this.mushroomRepository.UpdateMushroomById(mushroomId, inputModel);
+        }
     }
 }
