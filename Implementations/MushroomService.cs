@@ -1,6 +1,7 @@
 namespace ShroomCity.Services.Implementations;
 using ShroomCity.Models;
 using ShroomCity.Models.Dtos;
+using ShroomCity.Models.Enums;
 using ShroomCity.Models.InputModels;
 using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Interfaces;
@@ -15,9 +16,55 @@ public class MushroomService : IMushroomService
         this.mushroomRepository = mushroomRepository;
         this.externalMushroomService = externalMushroomService;
     }
-    public Task<int> CreateMushroom(string researcherEmailAddress, MushroomInputModel inputModel)
+    public async Task<int> CreateMushroom(string researcherEmailAddress, MushroomInputModel inputModel)
     {
-        throw new NotImplementedException();
+        var externalMushroom = await this.externalMushroomService.GetMushroomByName(inputModel.Name);
+
+#pragma warning disable CS8604 // Possible null reference argument.
+        var attributes = CreateAttributes(externalMushroom, researcherEmailAddress);
+#pragma warning restore CS8604 // Possible null reference argument.
+
+        var mushroomId = await this.mushroomRepository.CreateMushroom(inputModel, researcherEmailAddress, attributes);
+
+        return mushroomId;
+    }
+
+    private static List<AttributeDto> CreateAttributes(ExternalMushroomDto externalMushroom, string researcherEmailAddress)
+    {
+        var attributes = new List<AttributeDto>();
+
+        if (externalMushroom != null)
+        {
+            foreach (var color in externalMushroom.Colors)
+            {
+                attributes.Add(new AttributeDto
+                {
+                    Value = color,
+                    Type = AttributeTypeEnum.Color.ToString(),
+                    RegisteredBy = researcherEmailAddress,
+                });
+            }
+            foreach (var shape in externalMushroom.Shapes)
+            {
+                attributes.Add(new AttributeDto
+                {
+                    Value = shape,
+                    Type = AttributeTypeEnum.Shape.ToString(),
+                    RegisteredBy = researcherEmailAddress,
+                });
+            }
+            foreach (var surface in externalMushroom.Surfaces)
+            {
+                attributes.Add(new AttributeDto
+                {
+                    Value = surface,
+                    Type = AttributeTypeEnum.Surface.ToString(),
+                    RegisteredBy = researcherEmailAddress,
+                });
+            }
+        }
+
+        return attributes;
     }
 
     public Task<bool> CreateResearchEntry(int mushroomId, string researcherEmailAddress, ResearchEntryInputModel inputModel) => this.mushroomRepository.CreateResearchEntry(mushroomId, researcherEmailAddress, inputModel);
