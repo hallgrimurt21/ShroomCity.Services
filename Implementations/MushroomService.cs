@@ -22,11 +22,30 @@ public class MushroomService : IMushroomService
 
     public Task<bool> CreateResearchEntry(int mushroomId, string researcherEmailAddress, ResearchEntryInputModel inputModel) => this.mushroomRepository.CreateResearchEntry(mushroomId, researcherEmailAddress, inputModel);
 
-    public Task<bool> DeleteMushroomById(int mushroomId) => this.mushroomRepository.DeleteMushroomById(id);
+    public Task<bool> DeleteMushroomById(int mushroomId) => this.mushroomRepository.DeleteMushroomById(mushroomId);
 
-    public Task<Envelope<MushroomDto>?> GetLookupMushrooms(int pageSize, int pageNumber)
+    public async Task<Envelope<MushroomDto>?> GetLookupMushrooms(int pageSize, int pageNumber)
     {
-        throw new NotImplementedException();
+        var envelope = await this.externalMushroomService.GetMushrooms(pageSize, pageNumber);
+        if (envelope == null)
+        {
+            return null;
+        }
+
+        var mushrooms = envelope.Items.Select(m => new MushroomDto
+        {
+            Id = int.TryParse(m.Id, out var id) ? id : null,
+            Name = m.Name,
+            Description = m.Description
+        }).ToList();
+
+        return new Envelope<MushroomDto>
+        {
+            PageSize = envelope.PageSize,
+            PageNumber = envelope.PageNumber,
+            TotalPages = envelope.TotalPages,
+            Items = mushrooms
+        };
     }
 
     public Task<MushroomDetailsDto?> GetMushroomById(int id) => this.mushroomRepository.GetMushroomById(id);
