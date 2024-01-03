@@ -98,9 +98,9 @@ public class MushroomService : IMushroomService
 
     public Task<MushroomDetailsDto?> GetMushroomById(int id) => this.mushroomRepository.GetMushroomById(id);
 
-    public Envelope<MushroomDto>? GetMushrooms(string? name, int? stemSizeMinimum, int? stemSizeMaximum, int? capSizeMinimum, int? capSizeMaximum, string? color, int pageSize, int pageNumber)
+    public async Task<Envelope<MushroomDto>?> GetMushrooms(string? name, int? stemSizeMinimum, int? stemSizeMaximum, int? capSizeMinimum, int? capSizeMaximum, string? color, int pageSize, int pageNumber)
     {
-        var (totalPages, mushrooms) = this.mushroomRepository.GetMushroomsByCriteria(name, stemSizeMinimum, stemSizeMaximum, capSizeMinimum, capSizeMaximum, color, pageSize, pageNumber);
+        var (totalPages, mushrooms) = await this.mushroomRepository.GetMushroomsByCriteria(name, stemSizeMinimum, stemSizeMaximum, capSizeMinimum, capSizeMaximum, color, pageSize, pageNumber);
         return new Envelope<MushroomDto>
         {
             PageSize = pageSize,
