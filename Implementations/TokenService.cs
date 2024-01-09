@@ -49,6 +49,7 @@ public class TokenService : ITokenService
         {
             new(ClaimTypes.Name, user.Name),
             new(ClaimTypes.Email, user.EmailAddress),
+            new(ClaimTypeConstants.TokenIdClaimType, user.TokenId.ToString(CultureInfo.InvariantCulture))
         };
 
         foreach (var permission in user.Permissions)
