@@ -6,6 +6,7 @@ using ShroomCity.Models.Enums;
 using ShroomCity.Models.InputModels;
 using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Interfaces;
+using ShroomCity.Utilities.Exceptions;
 
 public class MushroomService : IMushroomService
 {
@@ -19,11 +20,9 @@ public class MushroomService : IMushroomService
     }
     public async Task<int> CreateMushroom(string researcherEmailAddress, MushroomInputModel inputModel)
     {
-        var externalMushroom = await this.externalMushroomService.GetMushroomByName(inputModel.Name);
+        var externalMushroom = await this.externalMushroomService.GetMushroomByName(inputModel.Name) ?? throw new MushroomNotFoundException(inputModel.Name);
 
-#pragma warning disable CS8604 // Possible null reference argument.
         var attributes = CreateAttributes(externalMushroom, researcherEmailAddress);
-#pragma warning restore CS8604 // Possible null reference argument.
 
         var mushroomId = await this.mushroomRepository.CreateMushroom(inputModel, researcherEmailAddress, attributes);
 
@@ -75,9 +74,9 @@ public class MushroomService : IMushroomService
     public async Task<Envelope<MushroomDto>?> GetLookupMushrooms(int pageSize, int pageNumber)
     {
         var envelope = await this.externalMushroomService.GetMushrooms(pageSize, pageNumber);
-        if (envelope == null)
+        if (envelope!.Items == null)
         {
-            return null;
+            throw new MushroomDataMissingException();
         }
 
         var mushrooms = envelope.Items.Select(m => new MushroomDto
