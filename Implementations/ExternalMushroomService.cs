@@ -26,12 +26,12 @@ public class ExternalMushroomService : IExternalMushroomService
 
     public async Task<Envelope<ExternalMushroomDto>?> GetMushrooms(int pageSize, int pageNumber)
     {
-        var response = await this.httpClient.GetAsync($"https://mushrooms-api-a309dd19945c.herokuapp.com/?pageNumber={pageNumber}&pageSize={pageSize}");
+        var response = await this.httpClient.GetAsync($"https://mushrooms-api-a309dd19945c.herokuapp.com/mushrooms/?pageNumber={pageNumber}&pageSize={pageSize}");
 
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<Envelope<ExternalMushroomDto>>(content);
+            return JsonSerializer.Deserialize<Envelope<ExternalMushroomDto>>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         }
 
         return null;
