@@ -114,7 +114,7 @@ public class MushroomService : IMushroomService
     {
         if (performLookup)
         {
-            var mushroom = await this.externalMushroomService.GetMushroomByName(inputModel.Name);
+            var mushroom = await this.mushroomRepository.GetMushroomById(mushroomId);
             if (mushroom == null)
             {
                 return false;
