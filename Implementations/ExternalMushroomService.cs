@@ -13,12 +13,13 @@ public class ExternalMushroomService : IExternalMushroomService
     public ExternalMushroomService(HttpClient httpClient) => this.httpClient = httpClient;
     public async Task<ExternalMushroomDto?> GetMushroomByName(string name)
     {
-        var response = await this.httpClient.GetAsync($"https://mushrooms-api-a309dd19945c.herokuapp.com/{name}");
+        var response = await this.httpClient.GetAsync($"https://mushrooms-api-a309dd19945c.herokuapp.com/mushrooms/{name}");
 
         if (response.IsSuccessStatusCode)
         {
             var content = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<ExternalMushroomDto>(content);
+            return JsonSerializer.Deserialize<ExternalMushroomDto>(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
         }
 
         return null;
