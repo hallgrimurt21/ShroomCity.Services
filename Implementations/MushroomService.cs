@@ -1,6 +1,7 @@
 namespace ShroomCity.Services.Implementations;
 
 using ShroomCity.Models;
+using ShroomCity.Models.Constants;
 using ShroomCity.Models.Dtos;
 using ShroomCity.Models.Enums;
 using ShroomCity.Models.InputModels;
@@ -40,7 +41,7 @@ public class MushroomService : IMushroomService
                 attributes.Add(new AttributeDto
                 {
                     Value = color,
-                    Type = AttributeTypeEnum.Color.ToString(),
+                    Type = AttributeTypeConstants.Color,
                     RegisteredBy = researcherEmailAddress,
                 });
             }
@@ -49,7 +50,7 @@ public class MushroomService : IMushroomService
                 attributes.Add(new AttributeDto
                 {
                     Value = shape,
-                    Type = AttributeTypeEnum.Shape.ToString(),
+                    Type = AttributeTypeConstants.Shape,
                     RegisteredBy = researcherEmailAddress,
                 });
             }
@@ -58,7 +59,7 @@ public class MushroomService : IMushroomService
                 attributes.Add(new AttributeDto
                 {
                     Value = surface,
-                    Type = AttributeTypeEnum.Surface.ToString(),
+                    Type = AttributeTypeConstants.Surface,
                     RegisteredBy = researcherEmailAddress,
                 });
             }
