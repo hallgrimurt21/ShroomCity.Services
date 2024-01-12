@@ -3,7 +3,6 @@ namespace ShroomCity.Services.Implementations;
 using ShroomCity.Models;
 using ShroomCity.Models.Constants;
 using ShroomCity.Models.Dtos;
-using ShroomCity.Models.Enums;
 using ShroomCity.Models.InputModels;
 using ShroomCity.Repositories.Interfaces;
 using ShroomCity.Services.Interfaces;
@@ -68,9 +67,11 @@ public class MushroomService : IMushroomService
         return attributes;
     }
 
-    public Task<bool> CreateResearchEntry(int mushroomId, string researcherEmailAddress, ResearchEntryInputModel inputModel) => this.mushroomRepository.CreateResearchEntry(mushroomId, researcherEmailAddress, inputModel);
+    public Task<bool> CreateResearchEntry(int mushroomId, string researcherEmailAddress, ResearchEntryInputModel inputModel)
+        => this.mushroomRepository.CreateResearchEntry(mushroomId, researcherEmailAddress, inputModel);
 
-    public Task<bool> DeleteMushroomById(int mushroomId) => this.mushroomRepository.DeleteMushroomById(mushroomId);
+    public Task<bool> DeleteMushroomById(int mushroomId)
+        => this.mushroomRepository.DeleteMushroomById(mushroomId);
 
     public async Task<Envelope<MushroomDto>?> GetLookupMushrooms(int pageSize, int pageNumber)
     {
@@ -96,7 +97,8 @@ public class MushroomService : IMushroomService
         };
     }
 
-    public Task<MushroomDetailsDto?> GetMushroomById(int id) => this.mushroomRepository.GetMushroomById(id);
+    public Task<MushroomDetailsDto?> GetMushroomById(int id)
+        => this.mushroomRepository.GetMushroomById(id);
 
     public async Task<Envelope<MushroomDto>?> GetMushrooms(string? name, int? stemSizeMinimum, int? stemSizeMaximum, int? capSizeMinimum, int? capSizeMaximum, string? color, int pageSize, int pageNumber)
     {
