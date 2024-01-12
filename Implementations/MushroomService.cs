@@ -20,7 +20,7 @@ public class MushroomService : IMushroomService
     }
     public async Task<int> CreateMushroom(string researcherEmailAddress, MushroomInputModel inputModel)
     {
-        var externalMushroom = await this.externalMushroomService.GetMushroomByName(inputModel.Name) ?? throw new MushroomNotFoundException(inputModel.Name);
+        var externalMushroom = await this.externalMushroomService.GetMushroomByName(inputModel.Name) ?? throw new MushroomNotFoundException();
 
         var attributes = CreateAttributes(externalMushroom, researcherEmailAddress);
 
@@ -32,36 +32,32 @@ public class MushroomService : IMushroomService
     private static List<AttributeDto> CreateAttributes(ExternalMushroomDto externalMushroom, string researcherEmailAddress)
     {
         var attributes = new List<AttributeDto>();
-
-        if (externalMushroom != null)
+        foreach (var color in externalMushroom.Colors)
         {
-            foreach (var color in externalMushroom.Colors)
+            attributes.Add(new AttributeDto
             {
-                attributes.Add(new AttributeDto
-                {
-                    Value = color,
-                    Type = AttributeTypeConstants.Color,
-                    RegisteredBy = researcherEmailAddress,
-                });
-            }
-            foreach (var shape in externalMushroom.Shapes)
+                Value = color,
+                Type = AttributeTypeConstants.Color,
+                RegisteredBy = researcherEmailAddress,
+            });
+        }
+        foreach (var shape in externalMushroom.Shapes)
+        {
+            attributes.Add(new AttributeDto
             {
-                attributes.Add(new AttributeDto
-                {
-                    Value = shape,
-                    Type = AttributeTypeConstants.Shape,
-                    RegisteredBy = researcherEmailAddress,
-                });
-            }
-            foreach (var surface in externalMushroom.Surfaces)
+                Value = shape,
+                Type = AttributeTypeConstants.Shape,
+                RegisteredBy = researcherEmailAddress,
+            });
+        }
+        foreach (var surface in externalMushroom.Surfaces)
+        {
+            attributes.Add(new AttributeDto
             {
-                attributes.Add(new AttributeDto
-                {
-                    Value = surface,
-                    Type = AttributeTypeConstants.Surface,
-                    RegisteredBy = researcherEmailAddress,
-                });
-            }
+                Value = surface,
+                Type = AttributeTypeConstants.Surface,
+                RegisteredBy = researcherEmailAddress,
+            });
         }
 
         return attributes;
