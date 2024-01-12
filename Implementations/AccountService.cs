@@ -15,9 +15,12 @@ public class AccountService : IAccountService
         this.tokenRepository = tokenRepository;
     }
 
-    public async Task<UserDto?> Register(RegisterInputModel inputModel) => await this.accountRepository.Register(inputModel);
+    public async Task<UserDto?> Register(RegisterInputModel inputModel)
+        => await this.accountRepository.Register(inputModel);
 
-    public async Task<UserDto?> SignIn(LoginInputModel inputModel) => await this.accountRepository.SignIn(inputModel);
+    public async Task<UserDto?> SignIn(LoginInputModel inputModel)
+        => await this.accountRepository.SignIn(inputModel);
 
-    public async Task SignOut(int tokenId) => await this.tokenRepository.BlacklistToken(tokenId);
+    public async Task SignOut(int tokenId)
+        => await this.tokenRepository.BlacklistToken(tokenId);
 }
